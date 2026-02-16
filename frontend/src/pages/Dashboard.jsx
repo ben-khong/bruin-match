@@ -23,15 +23,27 @@ function Dashboard() {
     navigate('/login');
   };
 
-  if (!user) return <div>Loading...</div>;
+  if (!user) return <div className="page-loading">Loading...</div>;
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Dashboard</h1>
-      <p>Welcome, {user.email}!</p>
-      <button onClick={handleLogout} style={{ padding: '10px 20px' }}>
-        Logout
-      </button>
+    <div className="dashboard">
+      <header className="dashboard-header">
+        <div>
+          <h1>Dashboard</h1>
+          <p className="dashboard-subtitle">Welcome, {user.email}!</p>
+        </div>
+        <button onClick={handleLogout} className="btn btn-secondary">
+          Logout
+        </button>
+      </header>
+      <section className="dashboard-card">
+        <h3>Your next steps</h3>
+        <ul>
+          <li>Finish your profile with housing preferences.</li>
+          <li>Browse potential roommates based on your vibe.</li>
+          <li>Send invites to start a group.</li>
+        </ul>
+      </section>
     </div>
   );
 }
