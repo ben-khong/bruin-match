@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Dashboard() {
   const [user, setUser] = useState(null);
+  const [hasProfile, setHasProfile] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,6 +16,17 @@ function Dashboard() {
     }
 
     setUser(JSON.parse(userData));
+
+    fetch('http://localhost:3001/api/profile', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setHasProfile(data.hasProfile);
+      })
+      .catch((err) => console.error('Profile check failed:', err));
   }, [navigate]);
 
   const handleLogout = () => {
@@ -36,12 +48,34 @@ function Dashboard() {
           Logout
         </button>
       </header>
+
+      {!hasProfile && (
+        <section className="dashboard-card incomplete-profile">
+          <div className="incomplete-profile-text">
+            <h3>Complete your profile</h3>
+            <p>Fill out your housing preferences so we can start matching you with roommates.</p>
+          </div>
+          <button className="btn btn-primary" onClick={() => navigate('/onboarding')}>
+            Complete Profile
+          </button>
+        </section>
+      )}
+
       <section className="dashboard-card">
         <h3>Your next steps</h3>
         <ul>
-          <li>Finish your profile with housing preferences.</li>
-          <li>Browse potential roommates based on your vibe.</li>
-          <li>Send invites to start a group.</li>
+          {hasProfile ? (
+            <>
+              <li>Browse potential roommates based on your vibe.</li>
+              <li>Send invites to start a group.</li>
+            </>
+          ) : (
+            <>
+              <li>Finish your profile with housing preferences.</li>
+              <li>Browse potential roommates based on your vibe.</li>
+              <li>Send invites to start a group.</li>
+            </>
+          )}
         </ul>
       </section>
     </div>
