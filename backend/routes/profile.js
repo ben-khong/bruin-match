@@ -76,25 +76,4 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 });
 
-// --- DEBUGGING PURPOSES --- 
-// I will remove this function after the token works (for submitting the onboarding form)
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  console.log('Auth header received:', authHeader);
-  const token = authHeader && authHeader.split(' ')[1];
-  console.log('Token extracted:', token);
-
-  if (!token) return res.status(401).json({ error: 'No token provided' });
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      console.log('JWT verify error:', err.message);
-      return res.status(403).json({ error: 'Invalid token' });
-    }
-    req.user = user;
-    next();
-  });
-}
-
-
 module.exports = router;
