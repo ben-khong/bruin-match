@@ -6,25 +6,17 @@ CREATE TABLE users (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Profiles table (basic info + contact)
-CREATE TABLE profiles (
+-- Combined profile + housing preferences
+CREATE TABLE user_profiles (
   id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-  name VARCHAR(100) NOT NULL,
-  year VARCHAR(20),
-  major VARCHAR(100),
-  gender VARCHAR(50),
-  bio TEXT,
-  contact_info VARCHAR(255),
-  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Housing Preferences table (for filtering)
-CREATE TABLE housing_preferences (
-  id SERIAL PRIMARY KEY,
-  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-  housing_type VARCHAR(50),
-  room_type VARCHAR(50),
-  move_in_term VARCHAR(50),
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE UNIQUE,
+  full_name VARCHAR(100) NOT NULL,
+  academic_year VARCHAR(20) NOT NULL,
+  major VARCHAR(100) NOT NULL,
+  gender VARCHAR(50) NOT NULL,
+  contact_info VARCHAR(255) NOT NULL,
+  housing_type VARCHAR(50) NOT NULL,
+  room_type VARCHAR(100) NOT NULL,
+  move_in_term VARCHAR(50) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
