@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const STEPS = ['Personal Info', 'Housing Preferences', 'Review'];
+const STEPS = ['Personal Info', 'Housing Preferences', 'Lifestyle', 'Review'];
 
 const ACADEMIC_YEARS = ['Freshman', 'Sophomore', 'Junior', 'Senior', 'Grad'];
 
@@ -28,6 +28,41 @@ const MOVE_IN_TERMS = [
 
 const GENDERS = ['Male', 'Female', 'Non-binary', 'Prefer not to say'];
 
+const SLEEP_TIMES = [
+  '8 PM to 10 PM',
+  '10 PM to 12 AM',
+  '12 AM to 2 AM',
+  'After 2 AM',
+];
+
+const WAKE_TIMES = [
+  'Before 6 AM',
+  '6–8 AM',
+  '8–10 AM',
+  'After 10 AM',
+];
+
+const THERMOSTAT_TEMPS = [
+  'Cool (Below 70°F)',
+  'Warm (70°F - 75°F)',
+  'Hot (Above 75°F)',
+  'No preference',
+];
+
+const GUEST_POLICIES = [
+  'No guests in our room',
+  'No guests after 10 PM',
+  'Ask before having guests',
+  'No overnight guests',
+  'Guests anytime, including overnight',
+];
+
+const NOISE_TOLERANCES = [
+  'TV and music off',
+  'TV and music okay',
+  'TV and music preferred',
+];
+
 function Onboarding() {
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
@@ -35,6 +70,7 @@ function Onboarding() {
   const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
+    // Profile
     full_name: '',
     academic_year: '',
     major: '',
@@ -43,6 +79,12 @@ function Onboarding() {
     housing_type: '',
     room_type: '',
     move_in_term: '',
+    // Preferences
+    sleep_time: '',
+    wake_time: '',
+    thermostat_temp: '',
+    guest_policy: '',
+    noise_tolerance: '',
   });
 
   const update = (field, value) => setForm((f) => ({ ...f, [field]: value }));
@@ -59,6 +101,13 @@ function Onboarding() {
       if (!form.housing_type) return 'Please select a housing type.';
       if (!form.room_type) return 'Please select a room type.';
       if (!form.move_in_term) return 'Please select a move-in term.';
+    }
+    if (step === 2) {
+      if (!form.sleep_time) return 'Please select your usual bedtime.';
+      if (!form.wake_time) return 'Please select your usual wake-up time.';
+      if (!form.thermostat_temp) return 'Please select your temperature preference.';
+      if (!form.guest_policy) return 'Please select your guest policy.';
+      if (!form.noise_tolerance) return 'Please select your noise tolerance.';
     }
     return null;
   };
@@ -105,6 +154,22 @@ function Onboarding() {
     }
   };
 
+  const reviewItems = [
+    ['Full Name', form.full_name],
+    ['Academic Year', form.academic_year],
+    ['Major', form.major],
+    ['Gender', form.gender],
+    ['Contact Info', form.contact_info],
+    ['Housing Type', form.housing_type],
+    ['Room Type', form.room_type],
+    ['Move-in Term', form.move_in_term],
+    ['Bedtime', form.sleep_time],
+    ['Wake-up Time', form.wake_time],
+    ['Temperature Preference', form.thermostat_temp],
+    ['Guest Policy', form.guest_policy],
+    ['Noise Tolerance', form.noise_tolerance],
+  ];
+
   return (
     <div className="auth-page">
       <div className="onboarding-card">
@@ -130,6 +195,7 @@ function Onboarding() {
           <div className="onboarding-section">
             <h2 className="onboarding-title">Personal Information</h2>
 
+            {/* Name */}
             <div className="auth-field">
               <label>Full Name</label>
               <input
@@ -141,6 +207,7 @@ function Onboarding() {
               />
             </div>
 
+            {/* Academic Year */}
             <div className="form-row">
               <div className="auth-field">
                 <label>Academic Year</label>
@@ -156,6 +223,7 @@ function Onboarding() {
                 </select>
               </div>
 
+              {/* Gender */}
               <div className="auth-field">
                 <label>Gender</label>
                 <select
@@ -171,6 +239,7 @@ function Onboarding() {
               </div>
             </div>
 
+            {/* Major */}
             <div className="auth-field">
               <label>Major</label>
               <input
@@ -182,6 +251,7 @@ function Onboarding() {
               />
             </div>
 
+            {/* Contact Info */}
             <div className="auth-field">
               <label>Contact Info</label>
               <input
@@ -200,65 +270,103 @@ function Onboarding() {
           <div className="onboarding-section">
             <h2 className="onboarding-title">Housing Preferences</h2>
 
+            {/* Housing Type */}
             <div className="auth-field">
               <label>Housing Type</label>
-              <select
-                className="auth-input"
-                value={form.housing_type}
-                onChange={(e) => update('housing_type', e.target.value)}
-              >
+              <select className="auth-input" value={form.housing_type}
+                onChange={(e) => update('housing_type', e.target.value)}>
                 <option value="">Select housing type</option>
-                {HOUSING_TYPES.map((h) => (
-                  <option key={h} value={h}>{h}</option>
-                ))}
+                {HOUSING_TYPES.map((h) => (<option key={h} value={h}>{h}</option>))}
               </select>
             </div>
 
+            {/* Room Type */}
             <div className="auth-field">
               <label>Room Type</label>
-              <select
-                className="auth-input"
-                value={form.room_type}
-                onChange={(e) => update('room_type', e.target.value)}
-              >
+              <select className="auth-input" value={form.room_type}
+                onChange={(e) => update('room_type', e.target.value)}>
                 <option value="">Select room type</option>
-                {ROOM_TYPES.map((r) => (
-                  <option key={r} value={r}>{r}</option>
-                ))}
+                {ROOM_TYPES.map((r) => <option key={r} value={r}>{r}</option>)}
               </select>
             </div>
 
+            {/* Move In Term */}
             <div className="auth-field">
               <label>Move-in Term</label>
-              <select
-                className="auth-input"
-                value={form.move_in_term}
-                onChange={(e) => update('move_in_term', e.target.value)}
-              >
+              <select className="auth-input" value={form.move_in_term}
+                onChange={(e) => update('move_in_term', e.target.value)}>
                 <option value="">Select term</option>
-                {MOVE_IN_TERMS.map((t) => (
-                  <option key={t} value={t}>{t}</option>
-                ))}
+                {MOVE_IN_TERMS.map((t) => (<option key={t} value={t}>{t}</option>))}
               </select>
             </div>
+
           </div>
         )}
 
-        {/* Step 3 — Review */}
+        {/* Step 3 — Lifestyle */}
         {step === 2 && (
+          <div className="onboarding-section">
+            <h2 className="onboarding-title">Your Living Style</h2>
+
+            {/* Bedtime */}
+            <div className="auth-field">
+              <label>When do you usually go to sleep?</label>
+              <select className="auth-input" value={form.sleep_time}
+                onChange={(e) => update('sleep_time', e.target.value)}>
+                <option value="">Select bedtime</option>
+                {SLEEP_TIMES.map((t) => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
+
+            {/* Wake time */}
+            <div className="auth-field">
+              <label>When do you usually wake up?</label>
+              <select className="auth-input" value={form.wake_time}
+                onChange={(e) => update('wake_time', e.target.value)}>
+                <option value="">Select wake-up time</option>
+                {WAKE_TIMES.map((t) => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
+
+            {/* Temperature */}
+            <div className="auth-field">
+              <label>What's your ideal room temperature?</label>
+              <select className="auth-input" value={form.thermostat_temp}
+                onChange={(e) => update('thermostat_temp', e.target.value)}>
+                <option value="">Select temperature preference</option>
+                {THERMOSTAT_TEMPS.map((t) => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
+
+            {/* Guest Policy */}
+            <div className="auth-field">
+              <label>What are your preferences for having guests?</label>
+              <select className="auth-input" value={form.guest_policy}
+                onChange={(e) => update('guest_policy', e.target.value)}>
+                <option value="">Select guest policy</option>
+                {GUEST_POLICIES.map((g) => <option key={g} value={g}>{g}</option>)}
+              </select>
+            </div>
+
+            {/* Noise Preference */}
+            <div className="auth-field">
+              <label>What are your noise preferences?</label>
+              <select className="auth-input" value={form.noise_tolerance}
+                onChange={(e) => update('noise_tolerance', e.target.value)}>
+                <option value="">Select noise tolerance</option>
+                {NOISE_TOLERANCES.map((n) => <option key={n} value={n}>{n}</option>)}
+              </select>
+            </div>
+
+          </div>
+        )}
+
+        {/* Step 4 — Review */}
+        {step === 3 && (
           <div className="onboarding-section">
             <h2 className="onboarding-title">Review Your Info</h2>
             <div className="review-grid">
-              {[
-                ['Full Name', form.full_name],
-                ['Academic Year', form.academic_year],
-                ['Major', form.major],
-                ['Gender', form.gender],
-                ['Contact Info', form.contact_info],
-                ['Housing Type', form.housing_type],
-                ['Room Type', form.room_type],
-                ['Move-in Term', form.move_in_term],
-              ].map(([label, value]) => (
+              {reviewItems.map(([label, value]) => (
                 <div key={label} className="review-item">
                   <span className="review-label">{label}</span>
                   <span className="review-value">{value}</span>
@@ -273,30 +381,34 @@ function Onboarding() {
 
         {/* Navigation */}
         <div className="onboarding-nav">
-        <button className="btn btn-ghost" onClick={() => navigate('/dashboard')}>
+          {/* Remind me later (returns to Dashboard) */}
+          <button className="btn btn-ghost" onClick={() => navigate('/dashboard')}>
             Remind me later
-        </button>
-        {step > 0 && (
-            <button className="btn btn-secondary" onClick={prevStep}>
-            Back
-            </button>
-        )}
-        {step < STEPS.length - 1 && (
+          </button>
+          
+          {/* Back (goes to previous page of survey) */}
+          {step > 0 && (
+             <button className="btn btn-secondary" onClick={prevStep}>
+             Back
+             </button>
+          )}
+          
+          {/* Next (goes to next page of survey) */}
+          {step < STEPS.length - 1 && (
             <button className="btn btn-primary" onClick={nextStep}>
             Next
             </button>
-        )}
-        {step === STEPS.length - 1 && (
-            <button
-            className="btn btn-primary"
-            onClick={handleSubmit}
-            disabled={submitting}
-            >
-            {submitting ? 'Saving...' : 'Complete Profile'}
+          )}
+          
+          {/* Submit (once all info is filled in) */}
+          {step === STEPS.length - 1 && (
+            <button className="btn btn-primary"
+            onClick={handleSubmit} disabled={submitting}>
+              {submitting ? 'Saving...' : 'Complete Profile'}
             </button>
-        )}
+          )}
         </div>
-
+        
       </div>
     </div>
   );
