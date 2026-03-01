@@ -1,13 +1,13 @@
--- Users table (authentication)
-CREATE TABLE users (
+-- Users table (authentication only)
+CREATE TABLE IF NOT EXISTS users (
   id SERIAL PRIMARY KEY,
   email VARCHAR(255) UNIQUE NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Combined profile + housing preferences
-CREATE TABLE user_profiles (
+-- Profile info (displayed on browse cards, used for filtering)
+CREATE TABLE IF NOT EXISTS user_profiles (
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE UNIQUE,
   full_name VARCHAR(100) NOT NULL,
@@ -18,5 +18,17 @@ CREATE TABLE user_profiles (
   housing_type VARCHAR(50) NOT NULL,
   room_type VARCHAR(100) NOT NULL,
   move_in_term VARCHAR(50) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Lifestyle preferences (shown on full profile view)
+CREATE TABLE IF NOT EXISTS user_preferences (
+  id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users(id) ON DELETE CASCADE UNIQUE,
+  sleep_time VARCHAR(50) NOT NULL,
+  wake_time VARCHAR(50) NOT NULL,
+  thermostat_temp VARCHAR(50) NOT NULL,
+  guest_policy VARCHAR(50) NOT NULL,
+  noise_tolerance VARCHAR(50) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
