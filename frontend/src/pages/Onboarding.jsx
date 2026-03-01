@@ -382,7 +382,7 @@ function Onboarding() {
         {/* Navigation */}
         <div className="onboarding-nav">
           {/* Remind me later (returns to Dashboard) */}
-          <button className="btn btn-ghost" onClick={() => navigate('/dashboard')}>
+          <button className="btn btn-ghost" style={{ marginRight: 'auto' }} onClick={() => navigate('/dashboard')}>
             Remind me later
           </button>
           

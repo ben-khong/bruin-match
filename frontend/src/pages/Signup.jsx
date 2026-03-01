@@ -41,6 +41,9 @@ function Signup() {
   return (
     <div className="auth-page">
       <div className="auth-card">
+        <button className="btn btn-ghost" style={{ alignSelf: 'flex-start', marginBottom: '8px', padding: '6px 0' }} onClick={() => navigate('/')}>
+          &larr; Back to home
+        </button>
         <h1 className="auth-title">Create your account</h1>
         <p className="auth-subtitle">Start matching in minutes.</p>
         <form onSubmit={handleSubmit}>
