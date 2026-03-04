@@ -3,6 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const profileRoutes = require('./routes/profile');
+const usersRoutes = require('./routes/users');
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3001;
@@ -13,6 +14,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/profile', profileRoutes);
+app.use('/api/users', usersRoutes);
 
 // Test route
 app.get('/api/test', (req, res) => {

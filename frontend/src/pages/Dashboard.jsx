@@ -78,6 +78,18 @@ function Dashboard() {
           )}
         </ul>
       </section>
+
+      <section className="dashboard-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+        <div>
+          <h3 style={{ margin: '0 0 4px' }}>Find a Roommate</h3>
+          <p style={{ margin: 0, color: '#64748b', fontSize: '0.95rem' }}>
+            Browse Bruins looking for a roommate and filter by your preferences.
+          </p>
+        </div>
+        <button className="btn btn-primary" onClick={() => navigate('/browse')}>
+          Browse Roommates
+        </button>
+      </section>
     </div>
   );
 }
