@@ -42,7 +42,7 @@ function Dashboard() {
       <header className="dashboard-header">
         <div>
           <h1>Dashboard</h1>
-          <p className="dashboard-subtitle">Welcome, {user.email}!</p>
+          <p className="dashboard-subtitle">Welcome, {user.username || user.email}!</p>
         </div>
         <button onClick={handleLogout} className="btn btn-secondary">
           Logout

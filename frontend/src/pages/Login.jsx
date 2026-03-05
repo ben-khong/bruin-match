@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {
-  const [email, setEmail] = useState('');
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ function Login() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
@@ -48,14 +48,14 @@ function Login() {
         <p className="auth-subtitle">Log in to continue matching.</p>
         <form onSubmit={handleSubmit}>
           <div className="auth-field">
-            <label>Email</label>
+            <label>Username</label>
             <input
               className="auth-input"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               required
-              placeholder="you@ucla.edu"
+              placeholder="bruin123"
             />
           </div>
           <div className="auth-field">

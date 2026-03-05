@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Signup() {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -17,7 +18,7 @@ function Signup() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       const data = await response.json();
@@ -47,6 +48,17 @@ function Signup() {
         <h1 className="auth-title">Create your account</h1>
         <p className="auth-subtitle">Start matching in minutes.</p>
         <form onSubmit={handleSubmit}>
+          <div className="auth-field">
+            <label>Username</label>
+            <input
+              className="auth-input"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+              placeholder="bruin123"
+            />
+          </div>
           <div className="auth-field">
             <label>Email</label>
             <input
