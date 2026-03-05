@@ -24,7 +24,7 @@ function Dashboard() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setHasProfile(data.hasProfile);
+        setHasProfile(data.hasProfile && data.hasPreferences);
       })
       .catch((err) => console.error('Profile check failed:', err));
   }, [navigate]);
