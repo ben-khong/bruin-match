@@ -21,6 +21,10 @@ function authenticateToken(req, res, next) {
 // Check if user data exists
 router.get('/', authenticateToken, async (req, res) => {
   try {
+    const accountResult = await pool.query(
+      'SELECT username, email FROM users WHERE id = $1',
+      [req.user.userId]
+    );
     const profileResult = await pool.query(
       'SELECT * FROM user_profiles WHERE user_id = $1',
       [req.user.userId]
@@ -36,6 +40,7 @@ router.get('/', authenticateToken, async (req, res) => {
     res.json({
       hasProfile,
       hasPreferences,
+      account: accountResult.rows[0] || null,
       profile: hasProfile ? profileResult.rows[0] : null,
       preferences: hasPreferences ? prefsResult.rows[0] : null,
     });
