@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Onboarding from './pages/Onboarding';
 import Browse from './pages/Browse';
+import Matches from './pages/Matches';
 import SidebarLayout from './components/SidebarLayout';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/onboarding" element={<Onboarding />} />
         <Route path="/dashboard" element={<SidebarLayout><Dashboard /></SidebarLayout>} />
         <Route path="/browse" element={<SidebarLayout><Browse /></SidebarLayout>} />
+        <Route path="/matches" element={<SidebarLayout><Matches /></SidebarLayout>} />
       </Routes>
     </Router>
   );
