@@ -5,17 +5,21 @@ const STEPS = ['Personal Info', 'Housing Preferences', 'Lifestyle', 'Review'];
 
 const ACADEMIC_YEARS = ['Freshman', 'Sophomore', 'Junior', 'Senior', 'Grad'];
 
-const HOUSING_TYPES = ['Dorms', 'University Apartments', 'Off-Campus Apartments'];
+const HOUSING_TYPES = ['On-Campus Residence Halls', 'University Apartments', 'Off-Campus Apartments'];
 
 const ROOM_TYPES = [
-  'Classic',
-  'Deluxe',
-  'Plaza',
-  'Suite',
-  'Univ. Apt Single',
-  'Univ. Apt Double',
-  'Univ. Apt Triple',
+  'Classic Residence Hall - Double & Triple',
+  'Deluxe Residence Hall - Double & Triple',
+  'Plaza Residences - Double & Triple',
+  'Suites - Double & Triple',
 ];
+
+const ROOM_TYPE_DETAILS = {
+  'Classic Residence Hall - Double & Triple': 'High-rise halls with communal bathrooms, study lounges, social lounges, and centralized laundry. No air conditioning.',
+  'Deluxe Residence Hall - Double & Triple': 'Classic-style high-rises upgraded with air conditioning, communal bathrooms, floor study lounges, and centralized laundry.',
+  'Plaza Residences - Double & Triple': 'Mix of courtyard and high-rise layouts with private/shared bathrooms, air conditioning, social spaces, and community laundry.',
+  'Suites - Double & Triple': 'Suite layout with a shared living room and bathroom between bedrooms. Renovated social/study spaces. No air conditioning.',
+};
 
 const MOVE_IN_TERMS = [
   'Fall 2025',
@@ -28,39 +32,82 @@ const MOVE_IN_TERMS = [
 
 const GENDERS = ['Male', 'Female', 'Non-binary', 'Prefer not to say'];
 
-const SLEEP_TIMES = [
-  '8 PM to 10 PM',
-  '10 PM to 12 AM',
-  '12 AM to 2 AM',
-  'After 2 AM',
-];
-
-const WAKE_TIMES = [
-  'Before 6 AM',
-  '6–8 AM',
-  '8–10 AM',
-  'After 10 AM',
-];
-
-const THERMOSTAT_TEMPS = [
-  'Cool (Below 70°F)',
-  'Warm (70°F - 75°F)',
-  'Hot (Above 75°F)',
-  'No preference',
-];
-
-const GUEST_POLICIES = [
-  'No guests in our room',
-  'No guests after 10 PM',
-  'Ask before having guests',
-  'No overnight guests',
-  'Guests anytime, including overnight',
-];
-
-const NOISE_TOLERANCES = [
-  'TV and music off',
-  'TV and music okay',
-  'TV and music preferred',
+const LIFESTYLE_QUESTIONS = [
+  {
+    key: 'sleep_time',
+    label: '1) When do you usually go to sleep?',
+    options: ['Before 10 PM', '10 PM to 12 AM', '12 AM to 2 AM', 'After 2 AM'],
+  },
+  {
+    key: 'wake_time',
+    label: '2) When do you usually wake up?',
+    options: ['Before 7 AM', '7 AM to 9 AM', '9 AM to 11 AM', 'After 11 AM'],
+  },
+  {
+    key: 'cleanliness_level',
+    label: '3) How would you describe your cleanliness level?',
+    options: [
+      'Very neat - I clean daily',
+      'Tidy - I clean a few times a week',
+      'Relaxed - I clean when it is noticeable',
+      'Messy does not bother me',
+    ],
+  },
+  {
+    key: 'guest_policy',
+    label: '4) How do you feel about guests/friends visiting the room?',
+    options: ['Anytime is fine', 'Fine with a heads-up', 'Occasionally, with advance notice', 'I prefer minimal visitors'],
+  },
+  {
+    key: 'overnight_guest_frequency',
+    label: '5) How often do you plan to have overnight guests?',
+    options: ['Never', 'Rarely (once a month or less)', 'Sometimes (a few times a month)', 'Frequently (weekly)'],
+  },
+  {
+    key: 'sharing_style',
+    label: '6) How do you feel about sharing personal items (food, supplies, etc.)?',
+    options: [
+      'Happy to share everything',
+      'Fine sharing some things if asked',
+      'I prefer to keep my stuff separate',
+      'Absolutely not - everything stays separate',
+    ],
+  },
+  {
+    key: 'noise_tolerance',
+    label: '7) What is your noise level when you are in the room?',
+    options: [
+      'Very quiet - headphones always',
+      'Moderate - occasional speakers at low volume',
+      'I like playing music/videos out loud',
+      'It varies a lot day to day',
+    ],
+  },
+  {
+    key: 'thermostat_temp',
+    label: '8) How do you feel about room temperature preferences?',
+    options: ['I like it cold', 'I like it cool', 'I like it warm', 'No preference'],
+  },
+  {
+    key: 'social_energy',
+    label: '9) How social do you want to be with your roommate?',
+    options: [
+      'Best friends - lets hang out all the time',
+      'Friendly - eat meals together sometimes',
+      'Cordial - we coexist respectfully',
+      'Independent - I keep to myself',
+    ],
+  },
+  {
+    key: 'conflict_style',
+    label: '10) How do you handle conflict or disagreements?',
+    options: [
+      'I address it right away, face to face',
+      'I bring it up calmly after thinking it over',
+      'I prefer to text/message about it',
+      'I tend to avoid confrontation',
+    ],
+  },
 ];
 
 function Onboarding() {
@@ -85,6 +132,11 @@ function Onboarding() {
     thermostat_temp: '',
     guest_policy: '',
     noise_tolerance: '',
+    cleanliness_level: '',
+    overnight_guest_frequency: '',
+    sharing_style: '',
+    social_energy: '',
+    conflict_style: '',
   });
 
   const update = (field, value) => setForm((f) => ({ ...f, [field]: value }));
@@ -103,11 +155,8 @@ function Onboarding() {
       if (!form.move_in_term) return 'Please select a move-in term.';
     }
     if (step === 2) {
-      if (!form.sleep_time) return 'Please select your usual bedtime.';
-      if (!form.wake_time) return 'Please select your usual wake-up time.';
-      if (!form.thermostat_temp) return 'Please select your temperature preference.';
-      if (!form.guest_policy) return 'Please select your guest policy.';
-      if (!form.noise_tolerance) return 'Please select your noise tolerance.';
+      const unanswered = LIFESTYLE_QUESTIONS.find((question) => !form[question.key]);
+      if (unanswered) return `Please answer: ${unanswered.label}`;
     }
     return null;
   };
@@ -167,7 +216,12 @@ function Onboarding() {
     ['Wake-up Time', form.wake_time],
     ['Temperature Preference', form.thermostat_temp],
     ['Guest Policy', form.guest_policy],
+    ['Overnight Guest Frequency', form.overnight_guest_frequency],
     ['Noise Tolerance', form.noise_tolerance],
+    ['Cleanliness Level', form.cleanliness_level],
+    ['Sharing Style', form.sharing_style],
+    ['Social Energy', form.social_energy],
+    ['Conflict Style', form.conflict_style],
   ];
 
   return (
@@ -288,6 +342,11 @@ function Onboarding() {
                 <option value="">Select room type</option>
                 {ROOM_TYPES.map((r) => <option key={r} value={r}>{r}</option>)}
               </select>
+              {form.room_type && (
+                <p style={{ marginTop: '8px', color: '#475569', fontSize: '0.92rem' }}>
+                  {ROOM_TYPE_DETAILS[form.room_type]}
+                </p>
+              )}
             </div>
 
             {/* Move In Term */}
@@ -300,63 +359,33 @@ function Onboarding() {
               </select>
             </div>
 
+            <p style={{ marginTop: '10px', color: '#64748b', fontSize: '0.92rem' }}>
+              Typical progression of amenities: Classic -> Deluxe -> Plaza -> Suites.
+            </p>
+
           </div>
         )}
 
         {/* Step 3 — Lifestyle */}
         {step === 2 && (
           <div className="onboarding-section">
-            <h2 className="onboarding-title">Your Living Style</h2>
+            <h2 className="onboarding-title">Your Living Style (10 Questions)</h2>
 
-            {/* Bedtime */}
-            <div className="auth-field">
-              <label>When do you usually go to sleep?</label>
-              <select className="auth-input" value={form.sleep_time}
-                onChange={(e) => update('sleep_time', e.target.value)}>
-                <option value="">Select bedtime</option>
-                {SLEEP_TIMES.map((t) => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-
-            {/* Wake time */}
-            <div className="auth-field">
-              <label>When do you usually wake up?</label>
-              <select className="auth-input" value={form.wake_time}
-                onChange={(e) => update('wake_time', e.target.value)}>
-                <option value="">Select wake-up time</option>
-                {WAKE_TIMES.map((t) => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-
-            {/* Temperature */}
-            <div className="auth-field">
-              <label>What's your ideal room temperature?</label>
-              <select className="auth-input" value={form.thermostat_temp}
-                onChange={(e) => update('thermostat_temp', e.target.value)}>
-                <option value="">Select temperature preference</option>
-                {THERMOSTAT_TEMPS.map((t) => <option key={t} value={t}>{t}</option>)}
-              </select>
-            </div>
-
-            {/* Guest Policy */}
-            <div className="auth-field">
-              <label>What are your preferences for having guests?</label>
-              <select className="auth-input" value={form.guest_policy}
-                onChange={(e) => update('guest_policy', e.target.value)}>
-                <option value="">Select guest policy</option>
-                {GUEST_POLICIES.map((g) => <option key={g} value={g}>{g}</option>)}
-              </select>
-            </div>
-
-            {/* Noise Preference */}
-            <div className="auth-field">
-              <label>What are your noise preferences?</label>
-              <select className="auth-input" value={form.noise_tolerance}
-                onChange={(e) => update('noise_tolerance', e.target.value)}>
-                <option value="">Select noise tolerance</option>
-                {NOISE_TOLERANCES.map((n) => <option key={n} value={n}>{n}</option>)}
-              </select>
-            </div>
+            {LIFESTYLE_QUESTIONS.map((question) => (
+              <div className="auth-field" key={question.key}>
+                <label>{question.label}</label>
+                <select
+                  className="auth-input"
+                  value={form[question.key]}
+                  onChange={(e) => update(question.key, e.target.value)}
+                >
+                  <option value="">Select an option</option>
+                  {question.options.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
+            ))}
 
           </div>
         )}

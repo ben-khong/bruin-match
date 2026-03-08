@@ -26,10 +26,15 @@ CREATE TABLE IF NOT EXISTS user_profiles (
 CREATE TABLE IF NOT EXISTS user_preferences (
   id SERIAL PRIMARY KEY,
   user_id INTEGER REFERENCES users(id) ON DELETE CASCADE UNIQUE,
-  sleep_time VARCHAR(50) NOT NULL,
-  wake_time VARCHAR(50) NOT NULL,
-  thermostat_temp VARCHAR(50) NOT NULL,
-  guest_policy VARCHAR(50) NOT NULL,
-  noise_tolerance VARCHAR(50) NOT NULL,
+  sleep_time VARCHAR(100) NOT NULL,
+  wake_time VARCHAR(100) NOT NULL,
+  cleanliness_level VARCHAR(120) NOT NULL,
+  overnight_guest_frequency VARCHAR(120) NOT NULL,
+  sharing_style VARCHAR(150) NOT NULL,
+  noise_tolerance VARCHAR(150) NOT NULL,
+  thermostat_temp VARCHAR(100) NOT NULL,
+  guest_policy VARCHAR(100) NOT NULL,
+  social_energy VARCHAR(100) NOT NULL,
+  conflict_style VARCHAR(120) NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

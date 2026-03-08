@@ -68,6 +68,11 @@ router.post('/', authenticateToken, async (req, res) => {
     thermostat_temp,
     guest_policy,
     noise_tolerance,
+    cleanliness_level,
+    overnight_guest_frequency,
+    sharing_style,
+    social_energy,
+    conflict_style,
   } = req.body;
 
   const client = await pool.connect();
@@ -95,16 +100,33 @@ router.post('/', authenticateToken, async (req, res) => {
 
     const prefsResult = await client.query(
       'INSERT INTO user_preferences' +
-      ' (user_id, sleep_time, wake_time, thermostat_temp, guest_policy, noise_tolerance)' +
-      ' VALUES ($1,$2,$3,$4,$5,$6)' +
+      ' (user_id, sleep_time, wake_time, thermostat_temp, guest_policy, noise_tolerance, cleanliness_level, overnight_guest_frequency, sharing_style, social_energy, conflict_style)' +
+      ' VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)' +
       ' ON CONFLICT (user_id) DO UPDATE SET' +
       ' sleep_time = EXCLUDED.sleep_time,' +
       ' wake_time = EXCLUDED.wake_time,' +
       ' thermostat_temp = EXCLUDED.thermostat_temp,' +
       ' guest_policy = EXCLUDED.guest_policy,' +
-      ' noise_tolerance = EXCLUDED.noise_tolerance' +
+      ' noise_tolerance = EXCLUDED.noise_tolerance,' +
+      ' cleanliness_level = EXCLUDED.cleanliness_level,' +
+      ' overnight_guest_frequency = EXCLUDED.overnight_guest_frequency,' +
+      ' sharing_style = EXCLUDED.sharing_style,' +
+      ' social_energy = EXCLUDED.social_energy,' +
+      ' conflict_style = EXCLUDED.conflict_style' +
       ' RETURNING *',
-      [req.user.userId, sleep_time, wake_time, thermostat_temp, guest_policy, noise_tolerance]
+      [
+        req.user.userId,
+        sleep_time,
+        wake_time,
+        thermostat_temp,
+        guest_policy,
+        noise_tolerance,
+        cleanliness_level,
+        overnight_guest_frequency,
+        sharing_style,
+        social_energy,
+        conflict_style,
+      ]
     );
 
     await client.query('COMMIT');

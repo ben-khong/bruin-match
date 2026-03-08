@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 function Dashboard() {
   const [user, setUser] = useState(null);
   const [hasProfile, setHasProfile] = useState(true);
+  const [topMatches, setTopMatches] = useState([]);
+  const [matchesLoading, setMatchesLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,9 +26,26 @@ function Dashboard() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setHasProfile(data.hasProfile && data.hasPreferences);
+        const profileReady = Boolean(data.hasProfile && data.hasPreferences);
+        setHasProfile(profileReady);
+
+        if (!profileReady) {
+          setMatchesLoading(false);
+          return;
+        }
+
+        return fetch('http://localhost:3001/api/users?page=1&limit=3', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((res) => res.json())
+          .then((matches) => {
+            setTopMatches(matches.users || []);
+          });
       })
-      .catch((err) => console.error('Profile check failed:', err));
+      .catch((err) => console.error('Profile check failed:', err))
+      .finally(() => setMatchesLoading(false));
   }, [navigate]);
 
   if (!user) return <div className="page-loading">Loading...</div>;
@@ -55,13 +74,60 @@ function Dashboard() {
       <section className="dashboard-card">
         <h3>How to use Bruin Match</h3>
         <ul>
-            <>
-              <li>Create your profile with housing preferences.</li>
-              <li>Browse potential roommates based on your vibe.</li>
-              <li>Send invites to start a group.</li>
-              <li>Start chatting!</li>
-            </>
+          <>
+            <li>Create your profile with housing preferences.</li>
+            <li>Browse potential roommates based on your vibe.</li>
+            <li>Send invites to start a group.</li>
+            <li>Start chatting!</li>
+          </>
         </ul>
+      </section>
+
+      <section className="dashboard-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+        <div>
+          <h3 style={{ margin: '0 0 4px' }}>Find a Roommate</h3>
+          <p style={{ margin: 0, color: '#64748b', fontSize: '0.95rem' }}>
+            Browse Bruins looking for a roommate and filter by your preferences.
+          </p>
+        </div>
+        <button className="btn btn-primary" onClick={() => navigate('/browse')}>
+          Browse Roommates
+        </button>
+      </section>
+
+      <section className="dashboard-card">
+        <h3 style={{ margin: '0 0 8px' }}>Top Matches</h3>
+        {matchesLoading ? (
+          <p style={{ margin: 0, color: '#64748b' }}>Loading ranked matches...</p>
+        ) : !hasProfile ? (
+          <p style={{ margin: 0, color: '#64748b' }}>Complete onboarding to see personalized compatibility scores.</p>
+        ) : topMatches.length === 0 ? (
+          <p style={{ margin: 0, color: '#64748b' }}>No matches found yet. Try broadening filters in Browse.</p>
+        ) : (
+          <div style={{ display: 'grid', gap: '10px' }}>
+            {topMatches.map((match) => (
+              <div
+                key={match.user_id}
+                style={{
+                  border: '1px solid #e2e8f0',
+                  borderRadius: '12px',
+                  padding: '10px 12px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <div>
+                  <div style={{ fontWeight: 600 }}>{match.full_name}</div>
+                  <div style={{ color: '#64748b', fontSize: '0.9rem' }}>
+                    {match.major} · {match.room_type}
+                  </div>
+                </div>
+                <div style={{ color: '#1d4ed8', fontWeight: 700 }}>{match.compatibility_score ?? 0}%</div>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );
